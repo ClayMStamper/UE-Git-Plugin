@@ -8,7 +8,7 @@
 #include "GitSourceControlChangelist.h"
 #include "ISourceControlProvider.h"
 #include "Misc/IQueuedWork.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 
 /** Accumulated error and info messages for a revision control operation.  */
 struct FGitSourceControlResultInfo
@@ -118,7 +118,7 @@ public:
 	/** Files to perform this operation on */
 	TArray<FString> Files;
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
     /** Changelist to perform this operation on */
     FGitSourceControlChangelist Changelist;
 #endif

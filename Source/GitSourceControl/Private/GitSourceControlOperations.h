@@ -4,6 +4,7 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #pragma once
+#include "Misc/EngineVersionComparison.h"
 
 #include "CoreMinimal.h"
 #include "IGitSourceControlWorker.h"
@@ -183,7 +184,7 @@ public:
 	TMap<const FString, FGitState> States;
 };
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 class FGitMoveToChangelistWorker : public IGitSourceControlWorker
 {
 public:

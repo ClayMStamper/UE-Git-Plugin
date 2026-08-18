@@ -5,7 +5,7 @@
 
 #include "SGitSourceControlSettings.h"
 
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 #include "Fonts/SlateFontInfo.h"
 #include "Misc/App.h"
 #include "Misc/FileHelper.h"
@@ -21,7 +21,7 @@
 #include "Widgets/Notifications/SNotificationList.h"
 #include "Framework/Notifications/NotificationManager.h"
 #include "EditorDirectories.h"
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 1, 0)
 #else
 #include "EditorStyleSet.h"
 #endif
@@ -45,7 +45,7 @@ void SGitSourceControlSettings::Construct(const FArguments& InArgs)
 	ConstructBasedOnEngineVersion( );
 }
 
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 void SGitSourceControlSettings::ConstructBasedOnEngineVersion( )
 {
 	const FText FileFilterType = NSLOCTEXT("GitSourceControl", "Executables", "Executables");
@@ -443,7 +443,7 @@ void SGitSourceControlSettings::ConstructBasedOnEngineVersion( )
 			ROW_RIGHT( 10.0f )
 			[
 				SNew(SFilePathPicker)
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 1, 0)
 				.BrowseButtonImage(FAppStyle::GetBrush("PropertyWindow.Button_Ellipsis"))
 				.BrowseButtonStyle(FAppStyle::Get(), "HoverHintOnly")
 #else
@@ -770,7 +770,7 @@ void SGitSourceControlSettings::LaunchMarkForAddOperation(const TArray<FString>&
 {
 	FGitSourceControlModule& GitSourceControl = FGitSourceControlModule::Get();
 	TSharedRef<FMarkForAdd, ESPMode::ThreadSafe> MarkForAddOperation = ISourceControlOperation::Create<FMarkForAdd>();
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	ECommandResult::Type Result = GitSourceControl.GetProvider().Execute(MarkForAddOperation, FSourceControlChangelistPtr(), InFiles, EConcurrency::Asynchronous, FSourceControlOperationComplete::CreateSP(this, &SGitSourceControlSettings::OnSourceControlOperationComplete));
 #else
 	ECommandResult::Type Result = GitSourceControl.GetProvider().Execute(MarkForAddOperation, InFiles, EConcurrency::Asynchronous, FSourceControlOperationComplete::CreateSP(this, &SGitSourceControlSettings::OnSourceControlOperationComplete));
@@ -791,7 +791,7 @@ void SGitSourceControlSettings::LaunchCheckInOperation()
 	TSharedRef<FCheckIn, ESPMode::ThreadSafe> CheckInOperation = ISourceControlOperation::Create<FCheckIn>();
 	CheckInOperation->SetDescription(InitialCommitMessage);
 	FGitSourceControlModule& GitSourceControl = FGitSourceControlModule::Get();
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	ECommandResult::Type Result = GitSourceControl.GetProvider().Execute(CheckInOperation, FSourceControlChangelistPtr(), FGitSourceControlModule::GetEmptyStringArray(), EConcurrency::Asynchronous, FSourceControlOperationComplete::CreateSP(this, &SGitSourceControlSettings::OnSourceControlOperationComplete));
 #else
 	ECommandResult::Type Result = GitSourceControl.GetProvider().Execute(CheckInOperation, FGitSourceControlModule::GetEmptyStringArray(), EConcurrency::Asynchronous, FSourceControlOperationComplete::CreateSP(this, &SGitSourceControlSettings::OnSourceControlOperationComplete));
@@ -859,7 +859,7 @@ void SGitSourceControlSettings::DisplaySuccessNotification(const FSourceControlO
 	const FText NotificationText = FText::Format(LOCTEXT("InitialCommit_Success", "{0} operation was successfull!"), FText::FromName(InOperation->GetName()));
 	FNotificationInfo Info(NotificationText);
 	Info.bUseSuccessFailIcons = true;
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 1, 0)
 	Info.Image = FAppStyle::GetBrush(TEXT("NotificationList.SuccessImage"));
 #else
 	Info.Image = FEditorStyle::GetBrush(TEXT("NotificationList.SuccessImage"));

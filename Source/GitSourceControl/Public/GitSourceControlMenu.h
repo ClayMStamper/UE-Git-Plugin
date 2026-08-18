@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "ISourceControlProvider.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 
 struct FToolMenuSection;
 class FMenuBuilder;
@@ -39,7 +39,7 @@ private:
 	bool StashAwayAnyModifications();
 	void ReApplyStashedModifications();
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	void AddMenuExtension(FToolMenuSection& Builder);
 #else
 	void AddMenuExtension(FMenuBuilder& Builder);
@@ -52,7 +52,7 @@ private:
 	static void DisplayFailureNotification(const FName& InOperationName);
 
 private:
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 	FDelegateHandle ViewMenuExtenderHandle;
 #endif
 

@@ -4,10 +4,11 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #include "GitSourceControlState.h"
+#include "Misc/EngineVersionComparison.h"
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #include "Textures/SlateIcon.h"
-#if ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 #include "RevisionControlStyle/RevisionControlStyle.h"
 #endif
 #endif
@@ -51,7 +52,7 @@ TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FGitSourceControlS
 	return nullptr;
 }
 
-#if ENGINE_MAJOR_VERSION < 5 || ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 3
+#if UE_VERSION_OLDER_THAN(5, 3, 0)
 TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FGitSourceControlState::GetBaseRevForMerge() const
 {
 	for(const auto& Revision : History)
@@ -67,14 +68,14 @@ TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FGitSourceControlS
 }
 #endif
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FGitSourceControlState::GetCurrentRevision() const
 {
 	return nullptr;
 }
 #endif
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 ISourceControlState::FResolveInfo FGitSourceControlState::GetResolveInfo() const
 {
 	return PendingResolveInfo;
@@ -83,12 +84,12 @@ ISourceControlState::FResolveInfo FGitSourceControlState::GetResolveInfo() const
 
 // @todo add Slate icons for git specific states (NotAtHead vs Conflicted...)
 
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 #define GET_ICON_RETURN( NAME ) FName( "ContentBrowser.SCC_" #NAME )
 FName FGitSourceControlState::GetIconName() const
 {
 #else
-#if ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 #define GET_ICON_RETURN( NAME ) FSlateIcon(FRevisionControlStyleManager::GetStyleSetName(), "RevisionControl." #NAME )
 #else
 #define GET_ICON_RETURN( NAME ) FSlateIcon(FAppStyle::GetAppStyleSetName(), "Perforce." #NAME )
@@ -118,7 +119,7 @@ FSlateIcon FGitSourceControlState::GetIcon() const
 	case EGitState::Ignored:
 		return GET_ICON_RETURN(NotInDepot);
 	default:
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 	  return NAME_None;
 #else
 	  return FSlateIcon();
@@ -126,7 +127,7 @@ FSlateIcon FGitSourceControlState::GetIcon() const
 	}
 }
 
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 FName FGitSourceControlState::GetSmallIconName() const
 {
 	switch (GetGitState()) {

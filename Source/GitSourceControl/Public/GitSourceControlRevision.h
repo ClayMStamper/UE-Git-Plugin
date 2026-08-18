@@ -6,7 +6,7 @@
 #pragma once
 
 #include "ISourceControlRevision.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 #include "Misc/DateTime.h"
 
 /** Revision of a file, linked to a specific commit */
@@ -14,7 +14,7 @@ class FGitSourceControlRevision : public ISourceControlRevision
 {
 public:
 	/** ISourceControlRevision interface */
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	virtual bool Get( FString& InOutFilename, EConcurrency::Type InConcurrency = EConcurrency::Synchronous ) const override;
 #else
 	virtual bool Get( FString& InOutFilename ) const override;

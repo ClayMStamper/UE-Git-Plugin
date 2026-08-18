@@ -1,6 +1,7 @@
 #include "GitSourceControlChangelistState.h"
+#include "Misc/EngineVersionComparison.h"
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #define LOCTEXT_NAMESPACE "GitSourceControl.ChangelistState"
 
 FName FGitSourceControlChangelistState::GetIconName() const
@@ -34,7 +35,7 @@ const FDateTime& FGitSourceControlChangelistState::GetTimeStamp() const
 	return TimeStamp;
 }
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 4, 0)
 const TArray<FSourceControlStateRef> FGitSourceControlChangelistState::GetFilesStates() const
 #else
 const TArray<FSourceControlStateRef>& FGitSourceControlChangelistState::GetFilesStates() const
@@ -43,14 +44,14 @@ const TArray<FSourceControlStateRef>& FGitSourceControlChangelistState::GetFiles
 	return Files;
 }
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 4, 0)
 int32 FGitSourceControlChangelistState::GetFilesStatesNum() const
 {
 	return Files.Num();
 }
 #endif
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 4, 0)
 const TArray<FSourceControlStateRef> FGitSourceControlChangelistState::GetShelvedFilesStates() const
 #else
 const TArray<FSourceControlStateRef>& FGitSourceControlChangelistState::GetShelvedFilesStates() const
@@ -59,7 +60,7 @@ const TArray<FSourceControlStateRef>& FGitSourceControlChangelistState::GetShelv
 	return ShelvedFiles;
 }
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 4, 0)
 int32 FGitSourceControlChangelistState::GetShelvedFilesStatesNum() const
 {
 	return ShelvedFiles.Num();

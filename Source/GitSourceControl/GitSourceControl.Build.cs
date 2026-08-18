@@ -25,7 +25,7 @@ public class GitSourceControl : ModuleRules
 			}
 		);
 
-		if (Target.Version.MajorVersion == 5)
+		if (Target.Version.MajorVersion >= 5)
 		{
 			PrivateDependencyModuleNames.Add("ToolMenus");
 		}

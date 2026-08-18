@@ -4,6 +4,7 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #include "GitSourceControlOperations.h"
+#include "Misc/EngineVersionComparison.h"
 
 #include "Misc/Paths.h"
 #include "Modules/ModuleManager.h"
@@ -17,7 +18,7 @@
 #include "Misc/MessageDialog.h"
 #include "HAL/PlatformProcess.h"
 #include "GenericPlatform/GenericPlatformFile.h"
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #include "HAL/PlatformFileManager.h"
 #else
 #include "HAL/PlatformFilemanager.h"
@@ -305,7 +306,7 @@ bool FGitCheckInWorker::Execute(FGitSourceControlCommand& InCommand)
 																				   "open, files cannot always be updated.\n\n"
 																				   "Please exit the editor, and update the project again."));
 							FText PushFailTitle(LOCTEXT("GitPush_OutOfDate_Title", "Git Pull Required"));
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 							FMessageDialog::Open(EAppMsgType::Ok, PushFailMessage, PushFailTitle);
 #else
 							FMessageDialog::Open(EAppMsgType::Ok, PushFailMessage, &PushFailTitle);
@@ -856,7 +857,7 @@ bool FGitResolveWorker::UpdateStates() const
 	return GitSourceControlUtils::UpdateCachedStates(States);
 }
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 FName FGitMoveToChangelistWorker::GetName() const
 {
 	return "MoveToChangelist";

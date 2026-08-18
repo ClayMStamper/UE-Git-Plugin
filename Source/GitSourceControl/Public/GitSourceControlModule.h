@@ -4,6 +4,7 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #pragma once
+#include "Misc/EngineVersionComparison.h"
 
 #include "Modules/ModuleInterface.h"
 #include "Modules/ModuleManager.h"
@@ -148,7 +149,7 @@ private:
 
 	static TArray<FString> EmptyStringArray;
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	// ContentBrowserDelegate Handles
 	FDelegateHandle CbdHandle_OnFilterChanged;
 	FDelegateHandle CbdHandle_OnSearchBoxChanged;

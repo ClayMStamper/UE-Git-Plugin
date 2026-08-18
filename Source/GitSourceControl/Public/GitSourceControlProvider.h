@@ -9,7 +9,7 @@
 #include "ISourceControlProvider.h"
 #include "IGitSourceControlWorker.h"
 #include "GitSourceControlMenu.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 
 class FGitSourceControlChangelistState;
 class FGitSourceControlState;
@@ -57,13 +57,13 @@ public:
 	virtual void RegisterStateBranches(const TArray<FString>& BranchNames, const FString& ContentRootIn) override;
 	virtual int32 GetStateBranchIndex(const FString& BranchName) const override;
 	virtual ECommandResult::Type GetState( const TArray<FString>& InFiles, TArray<FSourceControlStateRef>& OutState, EStateCacheUsage::Type InStateCacheUsage ) override;
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
     virtual ECommandResult::Type GetState(const TArray<FSourceControlChangelistRef>& InChangelists, TArray<FSourceControlChangelistStateRef>& OutState, EStateCacheUsage::Type InStateCacheUsage) override;
 #endif
 	virtual TArray<FSourceControlStateRef> GetCachedStateByPredicate(TFunctionRef<bool(const FSourceControlStateRef&)> Predicate) const override;
 	virtual FDelegateHandle RegisterSourceControlStateChanged_Handle(const FSourceControlStateChanged::FDelegate& SourceControlStateChanged) override;
 	virtual void UnregisterSourceControlStateChanged_Handle(FDelegateHandle Handle) override;
-#if ENGINE_MAJOR_VERSION < 5
+#if UE_VERSION_OLDER_THAN(5, 0, 0)
 	virtual ECommandResult::Type Execute( const FSourceControlOperationRef& InOperation, const TArray<FString>& InFiles, EConcurrency::Type InConcurrency = EConcurrency::Synchronous, const FSourceControlOperationComplete& InOperationCompleteDelegate = FSourceControlOperationComplete()) override;
 	virtual bool CanCancelOperation( const FSourceControlOperationRef& InOperation ) const override;
 	virtual void CancelOperation( const FSourceControlOperationRef& InOperation ) override;
@@ -75,9 +75,9 @@ public:
 	virtual bool UsesLocalReadOnlyState() const override;
 	virtual bool UsesChangelists() const override;
 	virtual bool UsesCheckout() const override;
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 1, 0)
 	virtual bool UsesFileRevisions() const override;
-#if ENGINE_MINOR_VERSION >= 8
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 8, 0)
 	virtual TOptional<bool> HasChangesToSync() const override;
 	virtual TOptional<bool> HasChangesToCheckIn() const override;
 #else
@@ -85,25 +85,25 @@ public:
 	virtual TOptional<int> GetNumLocalChanges() const override;
 #endif
 #endif
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 	virtual bool AllowsDiffAgainstDepot() const override;
 	virtual bool UsesUncontrolledChangelists() const override;
 	virtual bool UsesSnapshots() const override;
 #endif
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 8
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 8, 0)
 	virtual bool UsesSoftRevertOnDelete() const override;
 #endif
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 	virtual bool CanExecuteOperation( const FSourceControlOperationRef& InOperation ) const override;
 	virtual TMap<EStatus, FString> GetStatus() const override;
 #endif
 	virtual void Tick() override;
 	virtual TArray< TSharedRef<class ISourceControlLabel> > GetLabels( const FString& InMatchingSpec ) const override;
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 7
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 7, 0)
 	virtual bool GetStateBranchAtIndex(int32 BranchIndex, FString& OutBranchName) const override;
 #endif	
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	virtual TArray<FSourceControlChangelistRef> GetChangelists( EStateCacheUsage::Type InStateCacheUsage ) override;
 #endif
 
@@ -182,7 +182,7 @@ public:
 	/** Helper function used to update state cache */
 	TSharedRef<FGitSourceControlState, ESPMode::ThreadSafe> GetStateInternal(const FString& Filename);
 
-#if ENGINE_MAJOR_VERSION == 5	
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)	
 	/** Helper function used to update changelists state cache */
 	TSharedRef<FGitSourceControlChangelistState, ESPMode::ThreadSafe> GetStateInternal(const FGitSourceControlChangelist& InChangelist);
 #endif
@@ -224,7 +224,7 @@ public:
 	/** Indicates editor binaries are to be updated upon next sync */
 	bool bPendingRestart;
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	uint32 TicksUntilNextForcedUpdate = 0;
 #endif
 
@@ -291,7 +291,7 @@ private:
 
 	/** State cache */
 	TMap<FString, TSharedRef<class FGitSourceControlState, ESPMode::ThreadSafe> > StateCache;
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	TMap<FGitSourceControlChangelist, TSharedRef<class FGitSourceControlChangelistState, ESPMode::ThreadSafe> > ChangelistsStateCache;
 #endif
 

@@ -4,6 +4,7 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #include "GitSourceControlUtils.h"
+#include "Misc/EngineVersionComparison.h"
 
 #include "GitMessageLog.h"
 #include "GitSourceControlCommand.h"
@@ -12,7 +13,7 @@
 #include "HAL/PlatformProcess.h"
 
 #include "HAL/PlatformFile.h"
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #include "HAL/PlatformFileManager.h"
 #else
 #include "HAL/PlatformFilemanager.h"
@@ -35,8 +36,8 @@
 #include "FileHelpers.h"
 #include "Misc/MessageDialog.h"
 
-#include "Runtime/Launch/Resources/Version.h"
-#if ENGINE_MAJOR_VERSION == 5 
+#include "Misc/EngineVersionComparison.h"
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0) 
 #include "UObject/ObjectSaveContext.h"
 #endif
 
@@ -170,7 +171,7 @@ namespace GitSourceControlUtils
 				}
 			}
 		}
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 		if (!PackageNotIncludedInGit.IsEmpty())
 #else
 		if (PackageNotIncludedInGit.Num() > 0)
@@ -851,7 +852,7 @@ bool RunLFSCommand(const FString& InCommand, const FString& InRepositoryRoot, co
 #if PLATFORM_WINDOWS
 	FString LFSLockBinary = FString::Printf(TEXT("%s/git-lfs.exe"), *BaseDir);
 #elif PLATFORM_MAC
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #if PLATFORM_MAC_ARM64
 	FString LFSLockBinary = FString::Printf(TEXT("%s/git-lfs-mac-arm64"), *BaseDir);
 #else
@@ -1124,7 +1125,7 @@ public:
 	{
 		const FString& CommonAncestor = InResults[0]; // 1: The common ancestor of merged branches
 		CommonAncestorFileId = CommonAncestor.Mid(7, 40);
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 		CommonAncestorFileId = CommonAncestor.Mid(7, 40);
 		CommonAncestorFilename = CommonAncestor.Right(50);
 
@@ -1138,7 +1139,7 @@ public:
 	}
 
 	FString CommonAncestorFileId; ///< SHA1 Id of the file (warning: not the commit Id)
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 	FString RemoteFileId;		///< SHA1 Id of the file (warning: not the commit Id)
 
 	FString CommonAncestorFilename;
@@ -1160,7 +1161,7 @@ static void RunGetConflictStatus(const FString& InPathToGitBinary, const FString
 	{
 		// Parse the unmerge status: extract the base revision (or the other branch?)
 		FGitConflictStatusParser ConflictStatus(Results);
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 		InOutFileState.PendingResolveInfo.BaseFile = ConflictStatus.CommonAncestorFilename;
 		InOutFileState.PendingResolveInfo.BaseRevision = ConflictStatus.CommonAncestorFileId;
 		InOutFileState.PendingResolveInfo.RemoteFile = ConflictStatus.RemoteFilename;
@@ -1693,7 +1694,7 @@ FString GetFullPathFromGitStatus(const FString& Result, const FString& InReposit
 	return File;
 }
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 bool UpdateChangelistStateByCommand()
 {
 	// TODO: This is a temporary solution.
@@ -1780,7 +1781,7 @@ bool RunUpdateStatus(const FString& InPathToGitBinary, const FString& InReposito
 		ParseStatusResults(InPathToGitBinary, InRepositoryRoot, InUsingLfsLocking, RepoFiles, ResultsMap, OutStates);
 	}
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	UpdateChangelistStateByCommand();
 #endif
 
@@ -1789,7 +1790,7 @@ bool RunUpdateStatus(const FString& InPathToGitBinary, const FString& InReposito
 	return bResult;
 }
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 void UpdateFileStagingOnSaved(const FString& Filename, UPackage* Pkg, FObjectPostSaveContext ObjectSaveContext)
 {
 	UpdateFileStagingOnSavedInternal(Filename);
@@ -1829,7 +1830,7 @@ void UpdateStateOnAssetRename(const FAssetData& InAssetData, const FString& InOl
 	}
 	TSharedRef<FGitSourceControlState, ESPMode::ThreadSafe> State = Provider.GetStateInternal(InOldName);	
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 1
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 1, 0)
 	State->LocalFilename = InAssetData.GetObjectPathString();
 #else
 	State->LocalFilename = InAssetData.ObjectPath.ToString();
@@ -1895,7 +1896,7 @@ bool RunDumpToFile(const FString& InPathToGitBinary, const FString& InRepository
         }
     #endif
 
-#if ENGINE_MAJOR_VERSION == 5 && 0
+#if 0
 	FProcHandle ProcessHandle = FPlatformProcess::CreateProc(*PathToGitOrEnvBinary, *FullCommand, bLaunchDetached, bLaunchHidden, bLaunchReallyHidden, nullptr, 0, *InRepositoryRoot, PipeWrite, nullptr, nullptr);
 #else
 	FProcHandle ProcessHandle = FPlatformProcess::CreateProc(*PathToGitOrEnvBinary, *FullCommand, bLaunchDetached, bLaunchHidden, bLaunchReallyHidden, nullptr, 0, *InRepositoryRoot, PipeWrite);
@@ -2437,7 +2438,7 @@ bool PullOrigin(const FString& InPathToGitBinary, const FString& InPathToReposit
 																	"differences.\n\n"
 																	"Please exit the editor, and update the project."));
 		FText PullFailTitle(LOCTEXT("Git_NeedBinariesUpdate_Title", "Binaries Update Required"));
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 		FMessageDialog::Open(EAppMsgType::Ok, PullFailMessage, PullFailTitle);
 #else		
 		FMessageDialog::Open(EAppMsgType::Ok, PullFailMessage, &PullFailTitle);

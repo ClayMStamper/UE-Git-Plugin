@@ -4,6 +4,7 @@
 // or copy at http://opensource.org/licenses/MIT)
 
 #include "GitSourceControlRevision.h"
+#include "Misc/EngineVersionComparison.h"
 
 #include "HAL/FileManager.h"
 #include "Misc/Paths.h"
@@ -14,7 +15,7 @@
 
 #define LOCTEXT_NAMESPACE "GitSourceControl"
 
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 bool FGitSourceControlRevision::Get( FString& InOutFilename, EConcurrency::Type InConcurrency ) const
 {
 	if (InConcurrency != EConcurrency::Synchronous)

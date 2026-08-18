@@ -7,8 +7,8 @@
 
 #include "GitSourceControlRevision.h"
 #include "GitSourceControlState.h"
-#include "Runtime/Launch/Resources/Version.h"
-#if ENGINE_MAJOR_VERSION == 5
+#include "Misc/EngineVersionComparison.h"
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #include "UObject/ObjectSaveContext.h"
 #endif
 
@@ -253,7 +253,7 @@ void CheckRemote(const FString& InPathToGitBinary, const FString& InRepositoryRo
 bool RunUpdateStatus(const FString& InPathToGitBinary, const FString& InRepositoryRoot, const bool InUsingLfsLocking, const TArray<FString>& InFiles,
 					 TArray<FString>& OutErrorMessages, TMap<FString, FGitSourceControlState>& OutStates);
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 /**
  * Keep Consistency of being file staged
  *
@@ -280,7 +280,7 @@ bool UpdateFileStagingOnSavedInternal(const FString& Filename);
  */    
 void UpdateStateOnAssetRename(const FAssetData& InAssetData, const FString& InOldName);
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 /**
  * 
  *

@@ -1,6 +1,6 @@
 #pragma once
-#include "Runtime/Launch/Resources/Version.h"
-#if ENGINE_MAJOR_VERSION == 5
+#include "Misc/EngineVersionComparison.h"
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 #include "GitSourceControlChangelist.h"
 #include "ISourceControlChangelistState.h"
 #include "ISourceControlState.h"
@@ -58,7 +58,7 @@ public:
 	 */
 	virtual const FDateTime& GetTimeStamp() const override;
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 4, 0)
 	virtual const TArray<FSourceControlStateRef> GetFilesStates() const override;
 	virtual int32 GetFilesStatesNum() const override;
 

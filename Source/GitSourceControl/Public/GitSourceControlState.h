@@ -7,7 +7,7 @@
 
 #include "GitSourceControlChangelist.h"
 #include "GitSourceControlRevision.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 
 /** A consolidation of state priorities. */
 namespace EGitState
@@ -142,15 +142,15 @@ public:
 	virtual TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> GetHistoryItem(int32 HistoryIndex) const override;
 	virtual TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FindHistoryRevision(int32 RevisionNumber) const override;
 	virtual TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> FindHistoryRevision(const FString& InRevision) const override;
-#if ENGINE_MAJOR_VERSION < 5 || ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 3
+#if UE_VERSION_OLDER_THAN(5, 3, 0)
 	virtual TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> GetBaseRevForMerge() const override;
 #else
 	virtual FResolveInfo GetResolveInfo() const override;
 #endif
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 	virtual TSharedPtr<class ISourceControlRevision, ESPMode::ThreadSafe> GetCurrentRevision() const override;
 #endif
-#if ENGINE_MAJOR_VERSION >= 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	virtual FSlateIcon GetIcon() const override;
 #else
 	virtual FName GetIconName() const override;
@@ -193,7 +193,7 @@ public:
 	/** Filename on disk */
 	FString LocalFilename;
 
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 3, 0)
 	/** Pending rev info with which a file must be resolved, invalid if no resolve pending */
 	FResolveInfo PendingResolveInfo;
 
@@ -205,7 +205,7 @@ public:
 	/** Status of the file */
 	FGitState State;
 
-#if ENGINE_MAJOR_VERSION == 5
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 0, 0)
 	FGitSourceControlChangelist Changelist;
 #endif
 

@@ -7,10 +7,10 @@
 
 #include "Widgets/SCompoundWidget.h"
 #include "ISourceControlProvider.h"
-#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/EngineVersionComparison.h"
 
 class SNotificationItem;
-#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 2
+#if UE_VERSION_NEWER_THAN_OR_EQUAL(5, 2, 0)
 namespace ETextCommit { enum Type : int; }
 #else
 namespace ETextCommit { enum Type; }
