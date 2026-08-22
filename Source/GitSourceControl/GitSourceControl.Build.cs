@@ -19,6 +19,7 @@ public class GitSourceControl : ModuleRules
 				"DesktopWidgets",
 				"EditorStyle",
 				"UnrealEd",
+				"LevelEditor",
 				"SourceControl",
 				"SourceControlWindows",
 				"Projects"
