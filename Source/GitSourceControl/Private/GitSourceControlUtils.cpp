@@ -6,6 +6,17 @@
 #include "GitSourceControlUtils.h"
 #include "Misc/EngineVersionComparison.h"
 
+#if PLATFORM_MAC
+// The PLATFORM_MAC path of GitFindPath() below is Objective-C++ (the Apple
+// toolchain compiles .cpp as objective-c++). It used to pick up Cocoa
+// transitively from a unity blob; include it explicitly so this file also
+// compiles on its own when the adaptive non-unity build splits it out.
+// MacSystemIncludes.h is the engine's guarded include -- Carbon defines a
+// struct FVector that clashes with UE's, and this is what works around it.
+#include "Mac/MacSystemIncludes.h"
+#include "Apple/ScopeAutoreleasePool.h"
+#endif
+
 #include "GitMessageLog.h"
 #include "GitSourceControlCommand.h"
 #include "GitSourceControlModule.h"
